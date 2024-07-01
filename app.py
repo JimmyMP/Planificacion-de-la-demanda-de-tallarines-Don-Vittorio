@@ -77,32 +77,11 @@ def predict():
     train_size = int(len(loaded_data) * 0.8)
     train_data, test_data = loaded_data[:train_size], loaded_data[train_size:]
 
-    # Búsqueda de hiperparámetros óptimos
-    p = d = q = range(0, 2)
-    pdq = list(itertools.product(p, d, q))
-    seasonal_pdq = [(x[0], x[1], x[2], 12) for x in pdq]
 
-    best_aic = np.inf
-    best_pdq = None
-    best_seasonal_pdq = None
-
+    best_aic = 2.0
+    best_pdq = (0, 0, 0)
+    best_seasonal_pdq = (0, 2, 0, 12)
     warnings.filterwarnings("ignore") # Ignorar warnings de ajuste del modelo
-    for param in pdq:
-        for param_seasonal in seasonal_pdq:
-            try:
-                mod = SARIMAX(train_data["Demanda de fideos"], order=param, seasonal_order=param_seasonal)
-                results = mod.fit(disp=False)
-                if results.aic < best_aic:
-                    best_aic = results.aic
-                    best_pdq = param
-                    best_seasonal_pdq = param_seasonal
-            except:
-                continue
-
-    print(f'Mejor AIC: {best_aic}')
-    print(f'Mejor pdq: {best_pdq}')
-    print(f'Mejor seasonal pdq: {best_seasonal_pdq}')
-
     # Definición del modelo SARIMA con los mejores hiperparámetros
     sarima_model = SARIMAX(train_data["Demanda de fideos"], order=best_pdq, seasonal_order=best_seasonal_pdq)
 
