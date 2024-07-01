@@ -78,7 +78,7 @@ def predict():
     train_data, test_data = loaded_data[:train_size], loaded_data[train_size:]
 
     # Búsqueda de hiperparámetros óptimos
-    p = d = q = range(0, 3)
+    p = d = q = range(0, 2)
     pdq = list(itertools.product(p, d, q))
     seasonal_pdq = [(x[0], x[1], x[2], 12) for x in pdq]
 
